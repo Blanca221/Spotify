@@ -6,7 +6,7 @@
       </button>
     </div>
     <div class="logo">
-      <img src="https://via.placeholder.com/130x40/1DB954/FFFFFF?text=Spotify" alt="Spotify">
+      <img src="/images/spotify-logo.png" alt="Spotify" class="logo-img">
     </div>
     <div class="library-title">Tu biblioteca</div>
     <div class="tabs">
@@ -19,7 +19,7 @@
       <input type="text" v-model="search" placeholder="Buscar en tu biblioteca..." />
     </div>
     <div class="recent-list">
-      <!-- Ejemplos visuales -->
+      <!-- Ejemplos visuales (con portada personalizada) -->
       <div
         v-if="activeTab === 'listas'"
         v-for="item in items.listas"
@@ -33,7 +33,7 @@
           <div class="item-type">{{ item.type }}</div>
         </div>
       </div>
-      <!-- Playlists reales del store -->
+      <!-- Playlists reales del store (con collage) -->
       <div
         v-if="activeTab === 'listas'"
         v-for="playlist in store.playlists"
@@ -102,11 +102,11 @@ const router = useRouter()
 // Datos de ejemplo para listas, álbumes y artistas
 const items = {
   listas: [
-    { id: 1, name: 'Canciones que te gustan', type: 'Lista', img: 'https://via.placeholder.com/40/1DB954/fff?text=♥' },
-    { id: 2, name: 'El Ritmo', type: 'Lista', img: 'https://via.placeholder.com/40/333/fff?text=R' },
-    { id: 3, name: 'Pop con Ñ', type: 'Lista', img: 'https://via.placeholder.com/40/333/fff?text=P' },
-    { id: 4, name: 'Éxitos España', type: 'Lista', img: 'https://via.placeholder.com/40/333/fff?text=E' },
-    { id: 5, name: 'Mix diario 2', type: 'Lista', img: 'https://via.placeholder.com/40/333/fff?text=M' },
+    { id: 1, name: 'Canciones que te gustan', type: 'Lista', img: '/images/vultures.jpg' },
+    { id: 2, name: 'El Ritmo', type: 'Lista', img: '/images/saopaulo.jpg' },
+    { id: 3, name: 'Pop con Ñ', type: 'Lista', img: '/images/timeless.jpg' },
+    { id: 4, name: 'Éxitos España', type: 'Lista', img: '/images/wasneverthere.jpg' },
+    { id: 5, name: 'Mix diario 2', type: 'Lista', img: '/images/girlyouloud.jpg' },
   ],
   albumes: [
     { id: 6, name: 'Album Favorito', type: 'Álbum', img: 'https://via.placeholder.com/40/1DB954/fff?text=A' },
@@ -172,41 +172,46 @@ function expandSidebar() {
 }
 .tabs {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.7rem;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+  justify-content: flex-start;
+  padding-left: 0.2rem;
 }
 .tabs button {
   background: #181818;
   color: #b3b3b3;
   border: none;
   border-radius: 20px;
-  padding: 0.3rem 1.2rem;
+  padding: 0.4rem 1.4rem;
   font-size: 1rem;
   cursor: pointer;
   font-weight: 600;
   transition: background 0.2s, color 0.2s;
+  box-shadow: 0 1px 2px #0002;
 }
 .tabs button.active {
   background: #fff;
   color: #181818;
+  box-shadow: 0 2px 8px #0002;
 }
 .search-box {
   display: flex;
   align-items: center;
-  background: #181818;
-  border-radius: 20px;
-  padding: 0.3rem 1rem;
-  margin-bottom: 1rem;
-  color: #b3b3b3;
+  background: #232323;
+  border-radius: 999px;
+  padding: 0.4rem 1.2rem;
+  color: #fff;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
 }
 .search-box input {
-  border: none;
-  outline: none;
   background: transparent;
+  border: none;
   color: #fff;
-  margin-left: 0.5rem;
-  width: 100%;
+  outline: none;
   font-size: 1rem;
+  width: 160px;
+  margin-left: 0.5rem;
 }
 .recent-list {
   flex: 1;
@@ -339,5 +344,12 @@ function expandSidebar() {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.logo-img {
+  width: 120px;
+  margin-bottom: 1.2rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style> 
