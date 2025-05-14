@@ -19,7 +19,50 @@
       <input type="text" v-model="search" placeholder="Buscar en tu biblioteca..." />
     </div>
     <div class="recent-list">
-      <div v-for="item in filteredItems" :key="item.id" class="recent-item">
+      <!-- Ejemplos visuales -->
+      <div
+        v-if="activeTab === 'listas'"
+        v-for="item in items.listas"
+        :key="'ejemplo-' + item.id"
+        class="recent-item"
+      >
+        <img v-if="item.img" :src="item.img" class="item-img" />
+        <div v-else class="item-img placeholder"><i class="fas fa-music"></i></div>
+        <div class="item-info">
+          <div class="item-title">{{ item.name }}</div>
+          <div class="item-type">{{ item.type }}</div>
+        </div>
+      </div>
+      <!-- Playlists reales del store -->
+      <div
+        v-if="activeTab === 'listas'"
+        v-for="playlist in store.playlists"
+        :key="'real-' + playlist.id"
+        class="recent-item"
+        @click="goToPlaylist(playlist.id)"
+      >
+        <div class="collage-imgs">
+          <template v-if="getCollageCovers(playlist).length === 1">
+            <img :src="getCollageCovers(playlist)[0]" class="item-img" />
+          </template>
+          <template v-else>
+            <div class="collage">
+              <img v-for="(img, i) in getCollageCovers(playlist)" :key="i" :src="img" class="collage-img" />
+            </div>
+          </template>
+        </div>
+        <div class="item-info">
+          <div class="item-title">{{ playlist.name }}</div>
+          <div class="item-type">Lista</div>
+        </div>
+      </div>
+      <!-- El resto de tabs siguen igual -->
+      <div
+        v-else
+        v-for="item in filteredItems"
+        :key="item.id"
+        class="recent-item"
+      >
         <img v-if="item.img" :src="item.img" class="item-img" />
         <div v-else class="item-img placeholder"><i class="fas fa-music"></i></div>
         <div class="item-info">
@@ -46,11 +89,15 @@
 
 <script setup>
 import { ref, computed, defineEmits } from 'vue'
+import { useSongsStore } from '@/stores/songs'
+import { useRouter } from 'vue-router'
 const collapsed = ref(false)
 const emit = defineEmits(['toggleSidebar'])
 
 const activeTab = ref('listas')
 const search = ref('')
+const store = useSongsStore()
+const router = useRouter()
 
 // Datos de ejemplo para listas, álbumes y artistas
 const items = {
@@ -76,6 +123,16 @@ const filteredItems = computed(() => {
     item.name.toLowerCase().includes(search.value.toLowerCase())
   )
 })
+
+function goToPlaylist(id) {
+  router.push({ name: 'playlist', params: { id } })
+}
+
+function getCollageCovers(playlist) {
+  // Devuelve las 4 primeras portadas de las canciones de la playlist
+  if (!playlist.songs) return []
+  return playlist.songs.filter(song => song.cover).slice(0, 4).map(song => song.cover)
+}
 
 function collapseSidebar() {
   collapsed.value = true
@@ -260,5 +317,27 @@ function expandSidebar() {
   top: 2rem;
   left: 1rem;
   z-index: 100;
+}
+.collage {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.collage-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.collage-imgs {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style> 
