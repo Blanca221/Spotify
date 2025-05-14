@@ -1,15 +1,24 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
 import Sidebar from '@/components/Sidebar.vue'
 import Navbar from '@/components/Navbar.vue'
 import AudioPlayer from '@/components/AudioPlayer.vue'
+import { useSongsStore } from '@/stores/songs'
 
 const sidebarCollapsed = ref(false)
+const store = useSongsStore()
+
 function handleToggleSidebar(val) {
   sidebarCollapsed.value = val
 }
+
+// Cuando el componente se monta, carga las playlists desde el archivo JSON
+// usando el método loadPlaylists del store de canciones
+onMounted(() => {
+  store.loadPlaylists()
+})
 </script>
 
 <template>
