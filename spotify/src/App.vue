@@ -1,108 +1,41 @@
-<script setup>
-import { ref, onMounted } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import Sidebar from '@/components/Sidebar.vue'
-import Navbar from '@/components/Navbar.vue'
-import AudioPlayer from '@/components/AudioPlayer.vue'
-import { useSongsStore } from '@/stores/songs'
-
-const sidebarCollapsed = ref(false)
-const store = useSongsStore()
-
-function handleToggleSidebar(val) {
-  sidebarCollapsed.value = val
-}
-
-// Cuando el componente se monta, carga las playlists desde el archivo JSON
-// usando el método loadPlaylists del store de canciones
-onMounted(() => {
-  store.loadPlaylists()
-})
-</script>
-
 <template>
-  <div class="app">
-    <Sidebar @toggleSidebar="handleToggleSidebar" />
-    <div class="main-content" :class="{ expanded: sidebarCollapsed }">
-      <Navbar />
-      <main class="content">
-        <router-view />
-      </main>
+  <div class="app-layout">
+    <Sidebar />
+    <div class="main-section">
+      <router-view />
     </div>
     <AudioPlayer />
   </div>
 </template>
 
+<script setup>
+import Sidebar from './components/Sidebar.vue'
+import AudioPlayer from './components/AudioPlayer.vue'
+</script>
+
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body, #app {
-  height: 100%;
-  width: 100%;
-  background: #181818;
-  color: #fff;
-}
-
-.app {
+.app-layout {
   display: flex;
+  flex-direction: row;
   height: 100vh;
   width: 100vw;
   background: #181818;
   overflow: hidden;
 }
-
-.sidebar {
-  min-width: 240px;
-  width: 240px;
-  background: #000;
-  height: 100vh;
-  box-shadow: 2px 0 8px #000a;
-  z-index: 10;
-}
-
-.main-content {
+.main-section {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #181818;
   min-width: 0;
   height: 100vh;
-  overflow: hidden;
+  position: relative;
 }
 
-.content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 32px 40px 120px 40px;
-  background: linear-gradient(180deg, #181818 60%, #282828 100%);
-  min-height: 0;
+html, body, #app {
   height: 100%;
-}
-
-/* Scrollbar personalizado */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #121212;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #222;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #686868;
-}
-
-.main-content.expanded {
-  margin-left: 0 !important;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #181818;
 }
 </style>

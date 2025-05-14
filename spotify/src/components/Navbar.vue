@@ -1,29 +1,34 @@
 <template>
   <nav class="navbar">
     <div class="nav-left">
-      <button class="nav-btn">
-        <i class="fas fa-chevron-left"></i>
-      </button>
-      <button class="nav-btn">
-        <i class="fas fa-chevron-right"></i>
-      </button>
+      <button class="nav-btn nav-menu"><Icon icon="fa6-solid:ellipsis" /></button>
+      <button class="nav-btn nav-arrow"><Icon icon="fa6-solid:chevron-left" /></button>
+      <button class="nav-btn nav-arrow"><Icon icon="fa6-solid:chevron-right" /></button>
+    </div>
+    <div class="nav-center">
+      <button class="nav-btn home-btn"><Icon icon="fa6-solid:house" /></button>
+      <div class="search-bar-wrapper">
+        <div class="search-bar">
+          <Icon icon="fa6-solid:magnifying-glass" />
+          <input type="text" placeholder="¿Qué quieres reproducir?" v-model="search" />
+        </div>
+        <span class="search-divider"></span>
+        <button class="icon-btn box-btn"><Icon icon="fa6-solid:box-archive" /></button>
+      </div>
+      <button class="premium-btn">Descubrir Premium</button>
     </div>
     <div class="nav-right">
-      <div class="search-bar">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Buscar...">
-      </div>
-      <div class="user-menu">
-        <img src="https://via.placeholder.com/28" alt="Usuario" class="avatar">
-        <span class="username">Usuario</span>
-        <i class="fas fa-chevron-down"></i>
-      </div>
+      <button class="icon-btn"><Icon icon="fa6-regular:bell" /></button>
+      <button class="icon-btn"><Icon icon="fa6-solid:users" /></button>
+      <div class="user-circle">E</div>
     </div>
   </nav>
 </template>
 
 <script setup>
-// Lógica de la barra de navegación
+import { ref } from 'vue'
+import { Icon } from '@iconify/vue'
+const search = ref('')
 </script>
 
 <style scoped>
@@ -88,47 +93,77 @@ html, body, #app {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.2rem 2.5rem 1.2rem 2.5rem;
-  background: rgba(24, 24, 24, 0.95);
+  height: var(--navbar-height, 64px);
+  background: #000;
   box-shadow: 0 2px 8px #0002;
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 101;
+  border-bottom: 1px solid #222;
+  padding: 0 32px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .nav-left {
   display: flex;
+  align-items: center;
   gap: 0.7rem;
 }
 
 .nav-btn {
-  background: #181818;
+  background: #232323;
   border: none;
   color: #fff;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  cursor: pointer;
-  font-size: 1.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.nav-right {
+.nav-btn:hover {
+  background: #333;
+}
+
+.nav-menu {
+  font-size: 1.2rem;
+  margin-right: 0.2rem;
+}
+
+.nav-arrow {
+  font-size: 1.1rem;
+  margin-right: 0.2rem;
+}
+
+.home-btn {
+  margin-right: 0.2rem;
+}
+
+.search-bar-wrapper {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  background: #222;
+  border-radius: 24px;
+  padding: 0.1rem 0.3rem 0.1rem 0.7rem;
+  min-width: 340px;
+  max-width: 480px;
+  width: 100%;
 }
 
 .search-bar {
   display: flex;
   align-items: center;
-  background: #222;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  width: 320px;
+  background: transparent;
+  padding: 0.3rem 0;
+  border-radius: 24px;
+  width: 100%;
   color: #fff;
+  position: relative;
 }
 
 .search-bar input {
@@ -141,23 +176,105 @@ html, body, #app {
   font-size: 1rem;
 }
 
-.user-menu {
+.search-divider {
+  display: inline-block;
+  width: 1px;
+  height: 28px;
+  background: #444;
+  margin: 0 0.7rem;
+}
+
+.box-btn {
+  font-size: 1.2rem;
+  color: #aaa;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.box-btn:hover {
+  background: #333;
   color: #fff;
+}
+
+.nav-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.nav-center-premium {
+  display: flex;
+  align-items: center;
+  margin-left: 0.5rem;
+}
+
+.premium-btn {
+  background: #fff;
+  color: #181818;
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 1px 4px #0002;
+  transition: background 0.2s, color 0.2s;
+  margin-left: 2.5rem;
+}
+
+.premium-btn:hover {
+  background: #ffe600;
+  color: #181818;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.icon-btn:hover {
+  background: #333;
+}
+
+.user-circle {
+  width: 36px;
+  height: 36px;
+  background: #ff5e3a;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  box-shadow: 0 1px 4px #0002;
   cursor: pointer;
 }
 
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 2px solid #282828;
-}
-
-.username {
-  font-weight: 600;
-  font-size: 1rem;
+/* Asegura que los iconos de Font Awesome se vean bien */
+.fa-solid, .fa-regular, .fa-brands {
+  font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Brands', Arial, sans-serif;
+  font-weight: 900;
 }
 </style> 

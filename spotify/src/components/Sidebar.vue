@@ -1,10 +1,9 @@
 <template>
-  <aside class="sidebar" v-if="!collapsed">
-    <div class="sidebar-header">
-      <button class="collapse-btn" @click="collapseSidebar">
-        <i class="fas fa-angle-left"></i> Contraer tu biblioteca
-      </button>
-    </div>
+  <aside
+    class="sidebar"
+    v-if="!collapsed"
+    :style="{ width: sidebarWidth + 'px' }"
+  >
     <div class="logo">
       <img src="/images/spotify-logo.png" alt="Spotify" class="logo-img">
     </div>
@@ -12,10 +11,10 @@
     <div class="tabs">
       <button :class="{active: activeTab === 'listas'}" @click="activeTab = 'listas'">Listas</button>
       <button :class="{active: activeTab === 'albumes'}" @click="activeTab = 'albumes'">Álbumes</button>
-      <button :class="{active: activeTab === 'artistas'}" @click="activeTab = 'artistas'">Artistas</button>
+      <!-- <button :class="{active: activeTab === 'artistas'}" @click="activeTab = 'artistas'">Artistas</button> -->
     </div>
     <div class="search-box">
-      <i class="fas fa-search"></i>
+      <span class="search-icon"><Icon icon="fa6-solid:magnifying-glass" width="18" /></span>
       <input type="text" v-model="search" placeholder="Buscar en tu biblioteca..." />
     </div>
     <div class="recent-list">
@@ -81,6 +80,7 @@
         <span>Canciones que te gustan</span>
       </button>
     </div>
+    <div class="resize-handle" @mousedown="startResize"></div>
   </aside>
   <button v-else class="expand-btn" @click="expandSidebar">
     <i class="fas fa-angle-right"></i> Abrir tu biblioteca
@@ -88,7 +88,8 @@
 </template>
 
 <script setup>
-import { ref, computed, defineEmits } from 'vue'
+import { ref, computed, defineEmits, onMounted } from 'vue'
+import { Icon } from '@iconify/vue'
 import { useSongsStore } from '@/stores/songs'
 import { useRouter } from 'vue-router'
 const collapsed = ref(false)
@@ -98,6 +99,27 @@ const activeTab = ref('listas')
 const search = ref('')
 const store = useSongsStore()
 const router = useRouter()
+
+const sidebarWidth = ref(280)
+let isResizing = false
+
+function startResize(e) {
+  isResizing = true
+  document.body.style.cursor = 'ew-resize'
+}
+function stopResize() {
+  isResizing = false
+  document.body.style.cursor = ''
+}
+function onResize(e) {
+  if (isResizing) {
+    sidebarWidth.value = Math.max(200, Math.min(500, e.clientX))
+  }
+}
+onMounted(() => {
+  window.addEventListener('mousemove', onResize)
+  window.addEventListener('mouseup', stopResize)
+})
 
 // Datos de ejemplo para listas, álbumes y artistas
 const items = {
@@ -147,35 +169,58 @@ function expandSidebar() {
 <style scoped>
 .sidebar {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 280px;
-  height: 100vh;
+  top: 64px;
+  left: 24px;
+  bottom: 90px;
+  margin-top: 16px;
+  margin-bottom: 16px;
   background: #000;
-  padding: 2rem 1rem 1rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  box-shadow: 2px 0 8px #000a;
-  z-index: 100;
+  box-shadow: 2px 0 16px #000a;
+  z-index: 1000;
+  padding: 2rem 0.5rem 1rem 0.5rem;
+  min-width: 220px;
+  max-width: 400px;
+  width: 260px;
+  box-sizing: border-box;
+  border-radius: 18px;
+  max-height: calc(100vh - 64px - 90px - 32px);
+  height: auto;
 }
-.logo img {
-  width: 120px;
-  margin-bottom: 1rem;
+.logo-img {
+  width: 110px;
+  margin-left: 0.5rem;
+  margin-bottom: 1.5rem;
+  display: block;
 }
 .library-title {
   color: #fff;
   font-size: 1.2rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.2rem;
   margin-left: 0.2rem;
+  text-align: left;
+}
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+  z-index: 200;
 }
 .tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.7rem;
   margin-bottom: 1.2rem;
   justify-content: flex-start;
   padding-left: 0.2rem;
+  padding-right: 0.2rem;
+  box-sizing: border-box;
+  width: 100%;
 }
 .tabs button {
   background: #181818;
@@ -204,6 +249,14 @@ function expandSidebar() {
   gap: 0.5rem;
   margin-bottom: 1.2rem;
 }
+.search-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.3rem;
+  font-size: 1rem;
+  color: #b3b3b3;
+}
 .search-box input {
   background: transparent;
   border: none;
@@ -211,12 +264,12 @@ function expandSidebar() {
   outline: none;
   font-size: 1rem;
   width: 160px;
-  margin-left: 0.5rem;
+  margin-left: 0;
 }
 .recent-list {
   flex: 1;
   overflow-y: auto;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -344,12 +397,5 @@ function expandSidebar() {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.logo-img {
-  width: 120px;
-  margin-bottom: 1.2rem;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
 }
 </style> 
