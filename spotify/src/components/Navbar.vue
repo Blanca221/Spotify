@@ -90,18 +90,19 @@ html, body, #app {
 }
 
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
   height: var(--navbar-height, 64px);
   background: #000;
   box-shadow: 0 2px 8px #0002;
-  position: sticky;
-  top: 0;
-  z-index: 101;
   border-bottom: 1px solid #222;
   padding: 0 32px;
-  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   box-sizing: border-box;
 }
 

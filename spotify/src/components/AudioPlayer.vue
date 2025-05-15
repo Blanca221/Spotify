@@ -86,15 +86,14 @@ function formatTime(sec) {
   position: fixed;
   bottom: 0;
   left: 0;
-  right: 0;
   width: 100%;
+  z-index: 1000;
+  height: var(--audio-height, 90px);
   background: #000;
   padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 200;
-  height: var(--audio-height, 90px);
   box-shadow: 0 -2px 8px #000a;
 }
 

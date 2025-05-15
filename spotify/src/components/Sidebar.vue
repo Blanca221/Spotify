@@ -168,25 +168,20 @@ function expandSidebar() {
 
 <style scoped>
 .sidebar {
-  position: fixed;
-  top: 64px;
-  left: 24px;
-  bottom: 90px;
-  margin-top: 16px;
-  margin-bottom: 16px;
   background: #000;
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 16px #000a;
-  z-index: 1000;
   padding: 2rem 0.5rem 1rem 0.5rem;
   min-width: 220px;
   max-width: 400px;
   width: 260px;
   box-sizing: border-box;
   border-radius: 18px;
-  max-height: calc(100vh - 64px - 90px - 32px);
-  height: auto;
+  max-height: 100%;
+  height: 100%;
+  margin-right: 0;
+  padding-right: 0;
 }
 .logo-img {
   width: 110px;
@@ -269,10 +264,25 @@ function expandSidebar() {
 .recent-list {
   flex: 1;
   overflow-y: auto;
+  max-height: 100%;
+  /* Scrollbar personalizada */
+  scrollbar-width: thin;
+  scrollbar-color: #b3b3b3 transparent;
   margin-bottom: 1.2rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+.recent-list::-webkit-scrollbar {
+  width: 10px;
+  background: transparent;
+}
+.recent-list::-webkit-scrollbar-thumb {
+  background: #b3b3b3;
+  border-radius: 6px;
+}
+.recent-list::-webkit-scrollbar-track {
+  background: transparent;
 }
 .recent-item {
   display: flex;

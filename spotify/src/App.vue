@@ -1,7 +1,8 @@
 <template>
   <div class="app-layout">
-    <Sidebar />
-    <div class="main-section">
+    <Navbar />
+    <div class="main-flex">
+      <Sidebar />
       <router-view />
     </div>
     <AudioPlayer />
@@ -11,24 +12,27 @@
 <script setup>
 import Sidebar from './components/Sidebar.vue'
 import AudioPlayer from './components/AudioPlayer.vue'
+import Navbar from './components/Navbar.vue'
 </script>
 
 <style>
 .app-layout {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   height: 100vh;
   width: 100vw;
   background: #181818;
   overflow: hidden;
 }
-.main-section {
-  flex: 1;
+.main-flex {
   display: flex;
-  flex-direction: column;
-  min-width: 0;
-  height: 100vh;
-  position: relative;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  gap: 5px;
+  padding-top: 64px;
+  padding-bottom: 90px;
 }
 
 html, body, #app {

@@ -1,6 +1,5 @@
 <template>
   <div class="playlist-details-layout">
-    <Sidebar />
     <div class="details-content">
       <slot />
     </div>
@@ -8,7 +7,7 @@
 </template>
 
 <script setup>
-import Sidebar from '@/components/Sidebar.vue'
+// Sidebar eliminado
 </script>
 
 <style scoped>
