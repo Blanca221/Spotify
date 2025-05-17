@@ -1,25 +1,67 @@
 <template>
-  <aside class="sidebar" v-if="!collapsed">
-    <div class="sidebar-header">
-      <button class="collapse-btn" @click="collapseSidebar">
-        <i class="fas fa-angle-left"></i> Contraer tu biblioteca
-      </button>
-    </div>
+  <aside
+    class="sidebar"
+    v-if="!collapsed"
+    :style="{ width: sidebarWidth + 'px' }"
+  >
     <div class="logo">
-      <img src="https://via.placeholder.com/130x40/1DB954/FFFFFF?text=Spotify" alt="Spotify">
+      <img src="/images/spotify-logo.png" alt="Spotify" class="logo-img">
     </div>
     <div class="library-title">Tu biblioteca</div>
     <div class="tabs">
       <button :class="{active: activeTab === 'listas'}" @click="activeTab = 'listas'">Listas</button>
       <button :class="{active: activeTab === 'albumes'}" @click="activeTab = 'albumes'">Álbumes</button>
-      <button :class="{active: activeTab === 'artistas'}" @click="activeTab = 'artistas'">Artistas</button>
+      <!-- <button :class="{active: activeTab === 'artistas'}" @click="activeTab = 'artistas'">Artistas</button> -->
     </div>
     <div class="search-box">
-      <i class="fas fa-search"></i>
+      <span class="search-icon"><Icon icon="fa6-solid:magnifying-glass" width="18" /></span>
       <input type="text" v-model="search" placeholder="Buscar en tu biblioteca..." />
     </div>
     <div class="recent-list">
-      <div v-for="item in filteredItems" :key="item.id" class="recent-item">
+      <!-- Ejemplos visuales (con portada personalizada) -->
+      <div
+        v-if="activeTab === 'listas'"
+        v-for="item in items.listas"
+        :key="'ejemplo-' + item.id"
+        class="recent-item"
+      >
+        <img v-if="item.img" :src="item.img" class="item-img" />
+        <div v-else class="item-img placeholder"><i class="fas fa-music"></i></div>
+        <div class="item-info">
+          <div class="item-title">{{ item.name }}</div>
+          <div class="item-type">{{ item.type }}</div>
+        </div>
+      </div>
+      <!-- Playlists reales del store (con collage) -->
+      <div
+        v-if="activeTab === 'listas'"
+        v-for="playlist in store.playlists"
+        :key="'real-' + playlist.id"
+        class="recent-item"
+        @click="goToPlaylist(playlist.id)"
+      >
+        <div class="collage-imgs">
+          <template v-if="getCollageCovers(playlist).length === 1">
+            <img :src="getCollageCovers(playlist)[0]" class="item-img" />
+          </template>
+          <template v-else>
+            <div class="collage">
+              <img v-for="(img, i) in getCollageCovers(playlist)" :key="i" :src="img" class="collage-img" />
+            </div>
+          </template>
+        </div>
+        <div class="item-info">
+          <div class="item-title">{{ playlist.name }}</div>
+          <div class="item-type">Lista</div>
+        </div>
+      </div>
+      <!-- El resto de tabs siguen igual -->
+      <div
+        v-else
+        v-for="item in filteredItems"
+        :key="item.id"
+        class="recent-item"
+      >
         <img v-if="item.img" :src="item.img" class="item-img" />
         <div v-else class="item-img placeholder"><i class="fas fa-music"></i></div>
         <div class="item-info">
@@ -38,6 +80,7 @@
         <span>Canciones que te gustan</span>
       </button>
     </div>
+    <div class="resize-handle" @mousedown="startResize"></div>
   </aside>
   <button v-else class="expand-btn" @click="expandSidebar">
     <i class="fas fa-angle-right"></i> Abrir tu biblioteca
@@ -45,21 +88,47 @@
 </template>
 
 <script setup>
-import { ref, computed, defineEmits } from 'vue'
+import { ref, computed, defineEmits, onMounted } from 'vue'
+import { Icon } from '@iconify/vue'
+import { useSongsStore } from '@/stores/songs'
+import { useRouter } from 'vue-router'
 const collapsed = ref(false)
 const emit = defineEmits(['toggleSidebar'])
 
 const activeTab = ref('listas')
 const search = ref('')
+const store = useSongsStore()
+const router = useRouter()
+
+const sidebarWidth = ref(280)
+let isResizing = false
+
+function startResize(e) {
+  isResizing = true
+  document.body.style.cursor = 'ew-resize'
+}
+function stopResize() {
+  isResizing = false
+  document.body.style.cursor = ''
+}
+function onResize(e) {
+  if (isResizing) {
+    sidebarWidth.value = Math.max(200, Math.min(500, e.clientX))
+  }
+}
+onMounted(() => {
+  window.addEventListener('mousemove', onResize)
+  window.addEventListener('mouseup', stopResize)
+})
 
 // Datos de ejemplo para listas, álbumes y artistas
 const items = {
   listas: [
-    { id: 1, name: 'Canciones que te gustan', type: 'Lista', img: 'https://via.placeholder.com/40/1DB954/fff?text=♥' },
-    { id: 2, name: 'El Ritmo', type: 'Lista', img: 'https://via.placeholder.com/40/333/fff?text=R' },
-    { id: 3, name: 'Pop con Ñ', type: 'Lista', img: 'https://via.placeholder.com/40/333/fff?text=P' },
-    { id: 4, name: 'Éxitos España', type: 'Lista', img: 'https://via.placeholder.com/40/333/fff?text=E' },
-    { id: 5, name: 'Mix diario 2', type: 'Lista', img: 'https://via.placeholder.com/40/333/fff?text=M' },
+    { id: 1, name: 'Canciones que te gustan', type: 'Lista', img: '/images/vultures.jpg' },
+    { id: 2, name: 'El Ritmo', type: 'Lista', img: '/images/saopaulo.jpg' },
+    { id: 3, name: 'Pop con Ñ', type: 'Lista', img: '/images/timeless.jpg' },
+    { id: 4, name: 'Éxitos España', type: 'Lista', img: '/images/wasneverthere.jpg' },
+    { id: 5, name: 'Mix diario 2', type: 'Lista', img: '/images/girlyouloud.jpg' },
   ],
   albumes: [
     { id: 6, name: 'Album Favorito', type: 'Álbum', img: 'https://via.placeholder.com/40/1DB954/fff?text=A' },
@@ -77,6 +146,16 @@ const filteredItems = computed(() => {
   )
 })
 
+function goToPlaylist(id) {
+  router.push({ name: 'playlist', params: { id } })
+}
+
+function getCollageCovers(playlist) {
+  // Devuelve las 4 primeras portadas de las canciones de la playlist
+  if (!playlist.songs) return []
+  return playlist.songs.filter(song => song.cover).slice(0, 4).map(song => song.cover)
+}
+
 function collapseSidebar() {
   collapsed.value = true
   emit('toggleSidebar', true)
@@ -89,75 +168,121 @@ function expandSidebar() {
 
 <style scoped>
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 280px;
-  height: 100vh;
   background: #000;
-  padding: 2rem 1rem 1rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  box-shadow: 2px 0 8px #000a;
-  z-index: 100;
+  box-shadow: 2px 0 16px #000a;
+  padding: 2rem 0.5rem 1rem 0.5rem;
+  min-width: 220px;
+  max-width: 400px;
+  width: 260px;
+  box-sizing: border-box;
+  border-radius: 18px;
+  max-height: 100%;
+  height: 100%;
+  margin-right: 0;
+  padding-right: 0;
 }
-.logo img {
-  width: 120px;
-  margin-bottom: 1rem;
+.logo-img {
+  width: 110px;
+  margin-left: 0.5rem;
+  margin-bottom: 1.5rem;
+  display: block;
 }
 .library-title {
   color: #fff;
   font-size: 1.2rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.2rem;
   margin-left: 0.2rem;
+  text-align: left;
+}
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+  z-index: 200;
 }
 .tabs {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.7rem;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+  justify-content: flex-start;
+  padding-left: 0.2rem;
+  padding-right: 0.2rem;
+  box-sizing: border-box;
+  width: 100%;
 }
 .tabs button {
   background: #181818;
   color: #b3b3b3;
   border: none;
   border-radius: 20px;
-  padding: 0.3rem 1.2rem;
+  padding: 0.4rem 1.4rem;
   font-size: 1rem;
   cursor: pointer;
   font-weight: 600;
   transition: background 0.2s, color 0.2s;
+  box-shadow: 0 1px 2px #0002;
 }
 .tabs button.active {
   background: #fff;
   color: #181818;
+  box-shadow: 0 2px 8px #0002;
 }
 .search-box {
   display: flex;
   align-items: center;
-  background: #181818;
-  border-radius: 20px;
-  padding: 0.3rem 1rem;
-  margin-bottom: 1rem;
+  background: #232323;
+  border-radius: 999px;
+  padding: 0.4rem 1.2rem;
+  color: #fff;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+.search-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.3rem;
+  font-size: 1rem;
   color: #b3b3b3;
 }
 .search-box input {
-  border: none;
-  outline: none;
   background: transparent;
+  border: none;
   color: #fff;
-  margin-left: 0.5rem;
-  width: 100%;
+  outline: none;
   font-size: 1rem;
+  width: 160px;
+  margin-left: 0;
 }
 .recent-list {
   flex: 1;
   overflow-y: auto;
-  margin-bottom: 1rem;
+  max-height: 100%;
+  /* Scrollbar personalizada */
+  scrollbar-width: thin;
+  scrollbar-color: #b3b3b3 transparent;
+  margin-bottom: 1.2rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+.recent-list::-webkit-scrollbar {
+  width: 10px;
+  background: transparent;
+}
+.recent-list::-webkit-scrollbar-thumb {
+  background: #b3b3b3;
+  border-radius: 6px;
+}
+.recent-list::-webkit-scrollbar-track {
+  background: transparent;
 }
 .recent-item {
   display: flex;
@@ -260,5 +385,27 @@ function expandSidebar() {
   top: 2rem;
   left: 1rem;
   z-index: 100;
+}
+.collage {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.collage-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.collage-imgs {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style> 

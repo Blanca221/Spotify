@@ -34,7 +34,7 @@
     </div>
     <div class="library-list">
       <div v-if="activeTab === 'Listas'">
-        <div v-for="playlist in playlists" :key="playlist.id" class="library-item">
+        <div v-for="playlist in playlists" :key="playlist.id" class="library-item" @click="goToPlaylist(playlist.id)">
           <img :src="playlist.cover" class="item-cover" />
           <div class="item-info">
             <div class="item-title">{{ playlist.name }}</div>
@@ -66,9 +66,17 @@
 
 <script setup>
 import { ref } from 'vue'
-const activeTab = ref('Listas')
+//Import del store
+import { useSongsStore } from '@/stores/songs'
 
-const playlists = [
+const activeTab = ref('Listas')
+const store = useSongsStore()
+
+// playlists reales
+const playlists = store.playlists
+
+// playlists de ejemplo ( para pruebas visuales)
+const examplePlaylists = [
   {
     id: 1,
     name: "Canciones que te gustan",
@@ -82,7 +90,7 @@ const playlists = [
     owner: "Spotify"
   },
   // ...más playlists
-];
+]
 
 const albums = [
   {
@@ -98,7 +106,7 @@ const albums = [
     artist: "Varios"
   },
   // ...más álbumes
-];
+]
 
 const artists = [
   {
@@ -112,7 +120,7 @@ const artists = [
     cover: "https://i.scdn.co/image/ab6761610000e5eb2e2e2e2e2e2e2e2e2e2e2e2e2"
   },
   // ...más artistas
-];
+]
 </script>
 
 <style scoped>

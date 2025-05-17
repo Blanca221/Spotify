@@ -46,6 +46,12 @@ export const useSongsStore = defineStore('songs', {
       if (playlist) {
         playlist.songs.push(song)
       }
+    },
+    // Cargar las playlists desde el archivo JSON
+    async loadPlaylists() {
+      const res = await fetch('/playlists.json') // Si está en public
+      const data = await res.json()
+      this.playlists = data.playlists
     }
   },
 
