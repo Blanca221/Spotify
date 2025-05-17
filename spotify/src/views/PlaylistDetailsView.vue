@@ -29,16 +29,18 @@ const playlist = computed(() => {
 <style scoped>
 .playlist-details-layout {
   display: flex;
-  height: 100vh;
-  width: 100vw;
+  flex-direction: column;
+  min-height: 100vh;
   background: #181818;
 }
 .details-content {
   flex: 1;
-  overflow-y: auto;
-  padding: 0;
-  min-width: 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  padding: 64px 0 90px 0;
+  min-width: 0;
 }
 </style> 

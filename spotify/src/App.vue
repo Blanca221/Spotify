@@ -22,7 +22,6 @@ import Navbar from './components/Navbar.vue'
   height: 100vh;
   width: 100vw;
   background: #181818;
-  overflow: hidden;
 }
 .main-flex {
   display: flex;

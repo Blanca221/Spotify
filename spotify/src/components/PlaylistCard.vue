@@ -46,11 +46,12 @@ const collageCovers = computed(() => {
   border-radius: 18px;
   box-shadow: 0 4px 32px #000a;
   padding: 40px 48px 32px 48px;
-  min-height: 600px;
-  margin: 0;
+  margin: 16px 0 0 0;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  max-height: calc(100vh - 150px); /* Menor separación inferior */
+  overflow: hidden;
 }
 .playlist-header {
   display: flex;
@@ -103,6 +104,9 @@ const collageCovers = computed(() => {
   margin: 0;
 }
 .songs-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
