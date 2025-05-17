@@ -110,5 +110,18 @@ const collageCovers = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: #222 transparent;
+}
+.songs-list::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+.songs-list::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 4px;
+}
+.songs-list::-webkit-scrollbar-track {
+  background: transparent;
 }
 </style> 

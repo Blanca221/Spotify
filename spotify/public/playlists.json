@@ -4,14 +4,14 @@
       "id": 1,
       "name": "Lista privada",
       "owner": "Esmeralda",
-      "description": "12 canciones, 3 h 21 min",
+      "description": "7 canciones, 1 h 21 min",
       "songs": [
         {
           "id": 1,
           "title": "THE VULTURES",
           "artist": "PLVTINUM, Chris Grey",
           "album": "THE VULTURES",
-          "addedAt": "2025-02-22",
+          "addedAt": "25 feb 2025",
           "duration": "2:38",
           "cover": "/images/vultures.jpg",
           "audio": "/audio/vultures.mp3"
@@ -21,7 +21,7 @@
           "title": "São Paulo (feat. Anitta)",
           "artist": "The Weeknd, Anitta",
           "album": "São Paulo",
-          "addedAt": "2025-02-22",
+          "addedAt": "25 feb 2025",
           "duration": "5:02",
           "cover": "/images/saopaulo.jpg",
           "audio": "/audio/saopaulo.mp3"
@@ -31,7 +31,7 @@
           "title": "I Was Never There",
           "artist": "The Weeknd, Gesaffelstein",
           "album": "My Dear Melancholy,",
-          "addedAt": "2025-03-14T10:04:00",
+          "addedAt": "25 feb 2025",
           "duration": "4:01",
           "cover": "/images/wasneverthere.jpg",
           "audio": "/audio/wasneverthere.mp3"
@@ -41,7 +41,7 @@
           "title": "Timeless (feat. Playboi Carti)",
           "artist": "The Weeknd, Playboi Carti",
           "album": "Timeless",
-          "addedAt": "2025-03-14T10:04:00",
+          "addedAt": "25 feb 2025",
           "duration": "4:16",
           "cover": "/images/timeless.jpg",
           "audio": "/audio/timeless.mp3"
@@ -50,8 +50,8 @@
           "id": 5,
           "title": "Girl You Loud",
           "artist": "Chris Brown, Tyga",
-          "album": "Fan of A Fan The Album (Expanded Edition)",
-          "addedAt": "2025-03-13T18:00:00",
+          "album": "Fan of A Fan The Album",
+          "addedAt": "25 feb 2025",
           "duration": "3:33",
           "cover": "/images/girlyouloud.jpg",
           "audio": "/audio/girlyouloud.mp3"
@@ -61,7 +61,7 @@
           "title": "AL CALLAO'",
           "artist": "Rauw Alejandro",
           "album": "PLAYA SATURNO",
-          "addedAt": "2025-02-22",
+          "addedAt": "25 feb 2025",
           "duration": "4:03",
           "cover": "/images/alcallao.jpg",
           "audio": "/audio/alcallao.mp3"
@@ -71,7 +71,7 @@
           "title": "Dolida",
           "artist": "Chencho Corleone, Rauw Alejandro",
           "album": "Dolida",
-          "addedAt": "2025-03-14T10:07:00",
+          "addedAt": "25 feb 2025",
           "duration": "3:11",
           "cover": "/images/dolida.jpg",
           "audio": "/audio/dolida.mp3"

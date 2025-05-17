@@ -5,8 +5,10 @@
         <th>#</th>
         <th>Título</th>
         <th>Álbum</th>
-        <th>Fecha en la que se añadió</th>
-        <th><span class="icon-clock"></span></th>
+        <th>Fecha añadido..</th>
+        <th>
+          <svg class="icon-clock" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -77,8 +79,8 @@ const props = defineProps({
   color: #b3b3b3;
   font-size: 0.95em;
 }
-.icon-clock::before {
-  content: "⏱️";
-  font-size: 1.1em;
+.icon-clock {
+  vertical-align: middle;
+  display: inline-block;
 }
 </style> 
