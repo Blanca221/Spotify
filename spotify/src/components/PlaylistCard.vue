@@ -41,39 +41,43 @@ const collageCovers = computed(() => {
 <style scoped>
 .playlist-card {
   width: 100%;
-  max-width: 1100px;
+  max-width: none;
   background: linear-gradient(135deg, #b9932f 0%, #242424 100%);
-  border-radius: 18px;
+  border-radius: 24px;
   box-shadow: 0 4px 32px #000a;
   padding: 40px 48px 32px 48px;
-  margin: 16px 0 0 0;
+  margin: 8px 24px 24px 0;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  max-height: calc(100vh - 150px); /* Menor separación inferior */
+  max-height: calc(100vh - 150px);
   overflow: hidden;
 }
 .playlist-header {
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 2.5rem;
   margin-bottom: 2rem;
+  min-width: 0;
 }
 .playlist-cover-wrapper {
-  width: 220px;
-  height: 220px;
+  width: 240px;
+  height: 240px;
+  flex-shrink: 0;
 }
 .playlist-cover {
-  width: 220px;
-  height: 220px;
+  width: 240px;
+  height: 240px;
   border-radius: 12px;
   object-fit: cover;
   background: #222;
 }
 .collage {
-  width: 220px;
-  height: 220px;
+  width: 240px;
+  height: 240px;
   margin-right: 0;
+  flex-shrink: 0;
 }
 .collage-grid {
   width: 100%;
@@ -94,16 +98,25 @@ const collageCovers = computed(() => {
 .collage-img.single {
   border-radius: 12px;
 }
+.playlist-info {
+  flex: 1;
+  min-width: 0;
+}
 .playlist-info h1 {
   color: #fff;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   margin: 0 0 0.5rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .playlist-info p {
   color: #b3b3b3;
   margin: 0;
+  font-size: 1.1rem;
 }
 .songs-list {
+  width: 100%;
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
@@ -112,6 +125,7 @@ const collageCovers = computed(() => {
   gap: 0.5rem;
   scrollbar-width: thin;
   scrollbar-color: #222 transparent;
+  padding-right: 8px;
 }
 .songs-list::-webkit-scrollbar {
   width: 8px;

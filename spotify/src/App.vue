@@ -21,12 +21,12 @@ import Navbar from './components/Navbar.vue'
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  background: #181818;
+  background: #000;
 }
 .main-flex {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
   flex: 1;
   height: 100%;
   gap: 5px;
@@ -34,11 +34,16 @@ import Navbar from './components/Navbar.vue'
   padding-bottom: 90px;
 }
 
+.main-flex > *:not(.sidebar) {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 html, body, #app {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
-  background: #181818;
+  background: #000;
 }
 </style>
