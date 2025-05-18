@@ -79,7 +79,7 @@
 import { Icon } from '@iconify/vue'
 import { useSongsStore } from '@/stores/songs'
 import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 
 const store = useSongsStore()
 const { 
@@ -87,7 +87,8 @@ const {
   isPlaying, 
   volume, 
   currentTime, 
-  duration 
+  duration,
+  queue 
 } = storeToRefs(store)
 
 const { 
@@ -99,12 +100,24 @@ const {
   isLiked,
   formattedTime,
   setCurrentTime,
-  initAudio
+  initAudio,
+  setCurrentSong
 } = store
 
 onMounted(() => {
   initAudio()
+  // Si no hay canción seleccionada y hay canciones en la cola, reproducir la primera
+  if (!currentSong.value && queue.value.length > 0) {
+    setCurrentSong(queue.value[0])
+  }
 })
+
+// Observar cambios en la cola para reproducir la primera canción si no hay canción seleccionada
+watch(queue, (newQueue) => {
+  if (!currentSong.value && newQueue.length > 0) {
+    setCurrentSong(newQueue[0])
+  }
+}, { deep: true })
 
 const seekTo = (event) => {
   if (!currentSong.value) return

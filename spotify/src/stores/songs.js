@@ -10,7 +10,8 @@ export const useSongsStore = defineStore('songs', {
     playlists: [],
     currentTime: 0,
     duration: 0,
-    audioElement: null
+    audioElement: null,
+    allSongs: []
   }),
 
   actions: {
@@ -51,16 +52,38 @@ export const useSongsStore = defineStore('songs', {
     },
 
     nextSong() {
-      const currentIndex = this.queue.findIndex(song => song.id === this.currentSong?.id)
-      if (currentIndex < this.queue.length - 1) {
-        this.setCurrentSong(this.queue[currentIndex + 1])
+      if (!this.currentSong) {
+        if (this.allSongs.length > 0) {
+          this.setCurrentSong(this.allSongs[0])
+          this.togglePlay()
+        }
+        return
+      }
+
+      const currentIndex = this.allSongs.findIndex(song => song.id === this.currentSong.id)
+      if (currentIndex < this.allSongs.length - 1) {
+        this.setCurrentSong(this.allSongs[currentIndex + 1])
+        if (!this.isPlaying) {
+          this.togglePlay()
+        }
       }
     },
 
     previousSong() {
-      const currentIndex = this.queue.findIndex(song => song.id === this.currentSong?.id)
+      if (!this.currentSong) {
+        if (this.allSongs.length > 0) {
+          this.setCurrentSong(this.allSongs[0])
+          this.togglePlay()
+        }
+        return
+      }
+
+      const currentIndex = this.allSongs.findIndex(song => song.id === this.currentSong.id)
       if (currentIndex > 0) {
-        this.setCurrentSong(this.queue[currentIndex - 1])
+        this.setCurrentSong(this.allSongs[currentIndex - 1])
+        if (!this.isPlaying) {
+          this.togglePlay()
+        }
       }
     },
 
@@ -100,6 +123,14 @@ export const useSongsStore = defineStore('songs', {
       const res = await fetch('/playlists.json')
       const data = await res.json()
       this.playlists = data.playlists
+      
+      this.allSongs = this.playlists.reduce((songs, playlist) => {
+        return songs.concat(playlist.songs)
+      }, [])
+      
+      if (!this.currentSong && this.allSongs.length > 0) {
+        this.setCurrentSong(this.allSongs[0])
+      }
     },
 
     initAudio() {
