@@ -87,14 +87,27 @@ export const useSongsStore = defineStore('songs', {
         return
       }
 
-      const currentIndex = this.allSongs.findIndex(song => song.id === this.currentSong.id)
-      
       if (this.repeatMode === 'one') {
         // Repetir la misma canción
         this.setCurrentSong(this.currentSong)
         return
       }
 
+      if (this.isShuffle) {
+        // En modo aleatorio, elegir una canción aleatoria diferente a la actual
+        const currentIndex = this.allSongs.findIndex(song => song.id === this.currentSong.id)
+        let nextIndex
+        do {
+          nextIndex = Math.floor(Math.random() * this.allSongs.length)
+        } while (nextIndex === currentIndex && this.allSongs.length > 1)
+        this.setCurrentSong(this.allSongs[nextIndex])
+        if (!this.isPlaying) {
+          this.togglePlay()
+        }
+        return
+      }
+
+      const currentIndex = this.allSongs.findIndex(song => song.id === this.currentSong.id)
       if (currentIndex < this.allSongs.length - 1) {
         this.setCurrentSong(this.allSongs[currentIndex + 1])
         if (!this.isPlaying) {
@@ -118,14 +131,27 @@ export const useSongsStore = defineStore('songs', {
         return
       }
 
-      const currentIndex = this.allSongs.findIndex(song => song.id === this.currentSong.id)
-      
       if (this.repeatMode === 'one') {
         // Repetir la misma canción
         this.setCurrentSong(this.currentSong)
         return
       }
 
+      if (this.isShuffle) {
+        // En modo aleatorio, elegir una canción aleatoria diferente a la actual
+        const currentIndex = this.allSongs.findIndex(song => song.id === this.currentSong.id)
+        let prevIndex
+        do {
+          prevIndex = Math.floor(Math.random() * this.allSongs.length)
+        } while (prevIndex === currentIndex && this.allSongs.length > 1)
+        this.setCurrentSong(this.allSongs[prevIndex])
+        if (!this.isPlaying) {
+          this.togglePlay()
+        }
+        return
+      }
+
+      const currentIndex = this.allSongs.findIndex(song => song.id === this.currentSong.id)
       if (currentIndex > 0) {
         this.setCurrentSong(this.allSongs[currentIndex - 1])
         if (!this.isPlaying) {
