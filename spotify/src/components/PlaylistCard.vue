@@ -105,6 +105,7 @@ const collageCovers = computed(() => {
 .playlist-info h1 {
   color: #fff;
   font-size: 2.8rem;
+  font-weight: 700;
   margin: 0 0 0.5rem 0;
   white-space: nowrap;
   overflow: hidden;

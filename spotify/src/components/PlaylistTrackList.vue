@@ -48,21 +48,26 @@ const playSong = (song) => {
 .playlist-table {
   width: 100%;
   border-collapse: collapse;
-  background: transparent;
   color: #fff;
   font-size: 1rem;
+  background: rgba(24, 24, 24, 0.55); /* Fondo semitransparente */
+  backdrop-filter: blur(12px);         /* Efecto cristal */
+  border-radius: 18px;
+  box-shadow: 0 4px 32px #000a;
+  overflow: hidden;
+  border-top: 1.5px solid rgba(180,180,180,0.25); /* Borde superior gris translúcido */
 }
 .playlist-table thead tr {
   color: #b3b3b3;
   font-weight: 400;
-  border-bottom: 1px solid #333;
+  border-bottom: 2px solid rgba(180,180,180,0.5);
 }
 .playlist-table th, .playlist-table td {
   padding: 12px 8px;
   text-align: left;
 }
 .playlist-table tbody tr {
-  border-bottom: 1px solid #222;
+  /* border-bottom: 1px solid #222; */
   transition: background 0.2s;
   cursor: pointer;
 }
