@@ -46,7 +46,7 @@ const collageCovers = computed(() => {
   border-radius: 24px;
   box-shadow: 0 4px 32px #000a;
   padding: 40px 48px 32px 48px;
-  margin: 8px 24px 24px 0;
+  margin: 8px 24px 8px 0;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;

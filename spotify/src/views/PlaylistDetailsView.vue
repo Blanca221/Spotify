@@ -36,6 +36,6 @@ const playlist = computed(() => {
   overflow-y: auto;
   min-width: 0;
   padding-right: 24px;
-  padding-bottom: 90px;
+  padding-bottom: 98px;
 }
 </style> 
