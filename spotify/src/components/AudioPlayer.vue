@@ -2,84 +2,127 @@
   <div class="audio-player">
     <!-- Izquierda: portada, info y check -->
     <div class="player-left">
-      <img class="cover" src="/images/vultures.jpg" alt="cover" />
+      <img class="cover" :src="currentSong?.cover || '/images/default-cover.jpg'" alt="cover" />
       <div class="song-info">
-        <div class="title">FORÇA PESADA</div>
-        <div class="artist">Sayfalse, TRXSHBXY, Scythermane, MELIZA</div>
+        <div class="title">{{ currentSong?.title || 'No hay canción seleccionada' }}</div>
+        <div class="artist">{{ currentSong?.artist || 'Selecciona una canción para reproducir' }}</div>
       </div>
-      <svg class="icon-check" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1ed760" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>
+      <svg 
+        v-if="currentSong && isLiked(currentSong.id)"
+        class="icon-check" 
+        width="20" 
+        height="20" 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="#1ed760" 
+        stroke-width="2.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M8 12l2 2 4-4"/>
+      </svg>
     </div>
+
     <!-- Centro: controles y barra de progreso -->
     <div class="player-center">
       <div class="controls">
-        <button class="icon-btn">
-          <Icon icon="mdi:chevron-left-circle" width="40" height="40" color="#b3b3b3" />
+        <button class="icon-btn" @click="previousSong" :disabled="!currentSong">
+          <Icon icon="mdi:chevron-left-circle" width="40" height="40" :color="currentSong ? '#b3b3b3' : '#444'" />
         </button>
-        <button class="play-btn">
+        <button class="play-btn" @click="togglePlay" :disabled="!currentSong">
           <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-            <circle cx="28" cy="28" r="28" fill="#fff"/>
-            <polygon points="22,17 22,39 40,28" fill="#181818"/>
+            <circle cx="28" cy="28" r="28" :fill="currentSong ? '#fff' : '#444'"/>
+            <template v-if="isPlaying">
+              <rect x="22" y="18" width="4" height="20" fill="#181818"/>
+              <rect x="30" y="18" width="4" height="20" fill="#181818"/>
+            </template>
+            <template v-else>
+              <polygon points="22,17 22,39 40,28" fill="#181818"/>
+            </template>
           </svg>
         </button>
-        <button class="icon-btn">
-          <Icon icon="mdi:chevron-right-circle" width="40" height="40" color="#b3b3b3" />
+        <button class="icon-btn" @click="nextSong" :disabled="!currentSong">
+          <Icon icon="mdi:chevron-right-circle" width="40" height="40" :color="currentSong ? '#b3b3b3' : '#444'" />
         </button>
       </div>
       <div class="progress-bar-wrapper">
-        <span class="time">0:27</span>
-        <div class="progress-bar">
-          <div class="progress" style="width: 40%"></div>
+        <span class="time">{{ formattedTime(currentTime) }}</span>
+        <div class="progress-bar" @click="seekTo" :class="{ disabled: !currentSong }">
+          <div class="progress" :style="{ width: `${(currentTime / duration) * 100}%` }"></div>
         </div>
-        <span class="time">1:10</span>
+        <span class="time">{{ formattedTime(duration) }}</span>
       </div>
     </div>
+
     <!-- Derecha: controles secundarios -->
     <div class="player-right">
-      <!-- Micrófono (letra) -->
-      <button class="icon-btn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="9" y="2" width="6" height="12" rx="3"/>
-          <path d="M5 10v2a7 7 0 0 0 14 0v-2"/>
-          <line x1="12" y1="22" x2="12" y2="18"/>
+      <button class="icon-btn" @click="toggleLike(currentSong)" :disabled="!currentSong">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" :stroke="currentSong ? '#b3b3b3' : '#444'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
         </svg>
       </button>
-      <!-- Lista (cola) -->
-      <button class="icon-btn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <line x1="3" y1="12" x2="21" y2="12"/>
-          <line x1="3" y1="18" x2="15" y2="18"/>
-          <polyline points="18 15 21 18 18 21"/>
-        </svg>
-      </button>
-      <!-- Dispositivos (pantalla simple) -->
-      <button class="icon-btn">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="6" width="18" height="12" rx="2"/>
-          <line x1="8" y1="20" x2="16" y2="20"/>
-        </svg>
-      </button>
-      <!-- Volumen -->
       <div class="volume-bar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 5v14"/></svg>
-        <div class="volume-track">
-          <div class="volume-progress" style="width: 60%"></div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M19 5v14"/>
+        </svg>
+        <div class="volume-track" @click="setVolumeFromClick">
+          <div class="volume-progress" :style="{ width: `${volume}%` }"></div>
         </div>
       </div>
-      <!-- Expandir/minimizar (dos cuadrados) -->
-      <button class="icon-btn">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="7" y="7" width="10" height="10" rx="2"/>
-          <rect x="3" y="3" width="10" height="10" rx="2"/>
-        </svg>
-      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { Icon } from '@iconify/vue';
-// Solo estructura visual, sin lógica aún
+import { Icon } from '@iconify/vue'
+import { useSongsStore } from '@/stores/songs'
+import { storeToRefs } from 'pinia'
+import { onMounted } from 'vue'
+
+const store = useSongsStore()
+const { 
+  currentSong, 
+  isPlaying, 
+  volume, 
+  currentTime, 
+  duration 
+} = storeToRefs(store)
+
+const { 
+  togglePlay, 
+  setVolume, 
+  nextSong, 
+  previousSong, 
+  toggleLike, 
+  isLiked,
+  formattedTime,
+  setCurrentTime,
+  initAudio
+} = store
+
+onMounted(() => {
+  initAudio()
+})
+
+const seekTo = (event) => {
+  if (!currentSong.value) return
+  const progressBar = event.currentTarget
+  const clickPosition = event.offsetX
+  const progressBarWidth = progressBar.offsetWidth
+  const percentage = clickPosition / progressBarWidth
+  const newTime = percentage * duration.value
+  setCurrentTime(newTime)
+}
+
+const setVolumeFromClick = (event) => {
+  const volumeTrack = event.currentTarget
+  const clickPosition = event.offsetX
+  const trackWidth = volumeTrack.offsetWidth
+  const percentage = (clickPosition / trackWidth) * 100
+  setVolume(Math.round(percentage))
+}
 </script>
 
 <style scoped>
@@ -158,10 +201,14 @@ import { Icon } from '@iconify/vue';
   justify-content: center;
   box-shadow: 0 0 0 0 transparent;
 }
-.icon-btn:hover {
+.icon-btn:not(:disabled):hover {
   background: #222;
   color: #1ed760;
   box-shadow: 0 2px 8px #0002;
+}
+.icon-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 .play-btn {
   width: 48px;
@@ -177,9 +224,13 @@ import { Icon } from '@iconify/vue';
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
-.play-btn:hover {
+.play-btn:not(:disabled):hover {
   background: #fff;
   color: #181818;
+}
+.play-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 .progress-bar-wrapper {
   display: flex;
@@ -195,6 +246,11 @@ import { Icon } from '@iconify/vue';
   border-radius: 2px;
   overflow: hidden;
   position: relative;
+  cursor: pointer;
+}
+.progress-bar.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 .progress {
   height: 100%;
@@ -227,6 +283,7 @@ import { Icon } from '@iconify/vue';
   border-radius: 2px;
   overflow: hidden;
   position: relative;
+  cursor: pointer;
 }
 .volume-progress {
   height: 100%;

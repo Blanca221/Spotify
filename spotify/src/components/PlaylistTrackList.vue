@@ -12,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(song, idx) in songs" :key="song.id">
+      <tr v-for="(song, idx) in songs" :key="song.id" @click="playSong(song)" class="song-row">
         <td>{{ idx + 1 }}</td>
         <td class="song-title">
           <img :src="song.cover" alt="cover" class="song-cover" />
@@ -30,9 +30,18 @@
 </template>
 
 <script setup>
+import { useSongsStore } from '@/stores/songs'
+
 const props = defineProps({
   songs: Array
 })
+
+const store = useSongsStore()
+
+const playSong = (song) => {
+  store.setCurrentSong(song)
+  store.togglePlay()
+}
 </script>
 
 <style scoped>
@@ -55,6 +64,7 @@ const props = defineProps({
 .playlist-table tbody tr {
   border-bottom: 1px solid #222;
   transition: background 0.2s;
+  cursor: pointer;
 }
 .playlist-table tbody tr:hover {
   background: rgba(255,255,255,0.07);
@@ -82,5 +92,8 @@ const props = defineProps({
 .icon-clock {
   vertical-align: middle;
   display: inline-block;
+}
+.song-row {
+  cursor: pointer;
 }
 </style> 
