@@ -168,7 +168,7 @@ function expandSidebar() {
 
 <style scoped>
 .sidebar {
-  background: #000;
+  background: #232323;
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 16px #000a;

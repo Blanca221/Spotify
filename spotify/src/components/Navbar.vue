@@ -6,7 +6,7 @@
       <button class="nav-btn nav-arrow"><Icon icon="fa6-solid:chevron-right" /></button>
     </div>
     <div class="nav-center">
-      <button class="nav-btn home-btn"><Icon icon="fa6-solid:house" /></button>
+      <button class="nav-btn home-btn" @click="goHome"><Icon icon="fa6-solid:house" /></button>
       <div class="search-bar-wrapper">
         <div class="search-bar">
           <Icon icon="fa6-solid:magnifying-glass" />
@@ -28,7 +28,12 @@
 <script setup>
 import { ref } from 'vue'
 import { Icon } from '@iconify/vue'
+import { useRouter } from 'vue-router'
 const search = ref('')
+const router = useRouter()
+function goHome() {
+  router.push({ name: 'home' })
+}
 </script>
 
 <style scoped>
