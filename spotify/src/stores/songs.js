@@ -11,7 +11,10 @@ export const useSongsStore = defineStore('songs', {
     currentTime: 0,
     duration: 0,
     audioElement: null,
-    allSongs: []
+    allSongs: [],
+    isShuffle: false,
+    repeatMode: 'none', // 'none', 'one', 'all'
+    originalQueue: [] // Para guardar el orden original cuando se activa shuffle
   }),
 
   actions: {
@@ -51,6 +54,30 @@ export const useSongsStore = defineStore('songs', {
       }
     },
 
+    toggleShuffle() {
+      this.isShuffle = !this.isShuffle
+      if (this.isShuffle) {
+        // Guardar el orden original
+        this.originalQueue = [...this.allSongs]
+        // Mezclar las canciones
+        this.allSongs = [...this.allSongs].sort(() => Math.random() - 0.5)
+      } else {
+        // Restaurar el orden original
+        this.allSongs = [...this.originalQueue]
+      }
+    },
+
+    toggleRepeat() {
+      // Cambiar entre los tres modos: none -> one -> all -> none
+      if (this.repeatMode === 'none') {
+        this.repeatMode = 'one'
+      } else if (this.repeatMode === 'one') {
+        this.repeatMode = 'all'
+      } else {
+        this.repeatMode = 'none'
+      }
+    },
+
     nextSong() {
       if (!this.currentSong) {
         if (this.allSongs.length > 0) {
@@ -61,8 +88,21 @@ export const useSongsStore = defineStore('songs', {
       }
 
       const currentIndex = this.allSongs.findIndex(song => song.id === this.currentSong.id)
+      
+      if (this.repeatMode === 'one') {
+        // Repetir la misma canción
+        this.setCurrentSong(this.currentSong)
+        return
+      }
+
       if (currentIndex < this.allSongs.length - 1) {
         this.setCurrentSong(this.allSongs[currentIndex + 1])
+        if (!this.isPlaying) {
+          this.togglePlay()
+        }
+      } else if (this.repeatMode === 'all') {
+        // Volver al principio de la lista
+        this.setCurrentSong(this.allSongs[0])
         if (!this.isPlaying) {
           this.togglePlay()
         }
@@ -79,8 +119,21 @@ export const useSongsStore = defineStore('songs', {
       }
 
       const currentIndex = this.allSongs.findIndex(song => song.id === this.currentSong.id)
+      
+      if (this.repeatMode === 'one') {
+        // Repetir la misma canción
+        this.setCurrentSong(this.currentSong)
+        return
+      }
+
       if (currentIndex > 0) {
         this.setCurrentSong(this.allSongs[currentIndex - 1])
+        if (!this.isPlaying) {
+          this.togglePlay()
+        }
+      } else if (this.repeatMode === 'all') {
+        // Ir al final de la lista
+        this.setCurrentSong(this.allSongs[this.allSongs.length - 1])
         if (!this.isPlaying) {
           this.togglePlay()
         }
@@ -147,7 +200,13 @@ export const useSongsStore = defineStore('songs', {
         })
 
         this.audioElement.addEventListener('ended', () => {
-          this.nextSong()
+          if (this.repeatMode === 'one') {
+            // Repetir la misma canción
+            this.audioElement.currentTime = 0
+            this.audioElement.play()
+          } else {
+            this.nextSong()
+          }
         })
       }
     }

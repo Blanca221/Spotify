@@ -57,6 +57,17 @@
 
     <!-- Derecha: controles secundarios -->
     <div class="player-right">
+      <button class="icon-btn" @click="toggleShuffle" :disabled="!currentSong" :class="{ active: isShuffle }">
+        <Icon icon="mdi:shuffle" width="20" height="20" :color="isShuffle ? '#1ed760' : (currentSong ? '#b3b3b3' : '#444')" />
+      </button>
+      <button class="icon-btn" @click="toggleRepeat" :disabled="!currentSong" :class="{ active: repeatMode !== 'none' }">
+        <Icon 
+          :icon="repeatMode === 'one' ? 'mdi:repeat-once' : 'mdi:repeat'" 
+          width="20" 
+          height="20" 
+          :color="repeatMode !== 'none' ? '#1ed760' : (currentSong ? '#b3b3b3' : '#444')" 
+        />
+      </button>
       <button class="icon-btn" @click="toggleLike(currentSong)" :disabled="!currentSong">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" :stroke="currentSong ? '#b3b3b3' : '#444'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
@@ -88,7 +99,9 @@ const {
   volume, 
   currentTime, 
   duration,
-  queue 
+  queue,
+  isShuffle,
+  repeatMode
 } = storeToRefs(store)
 
 const { 
@@ -101,7 +114,9 @@ const {
   formattedTime,
   setCurrentTime,
   initAudio,
-  setCurrentSong
+  setCurrentSong,
+  toggleShuffle,
+  toggleRepeat
 } = store
 
 onMounted(() => {
@@ -303,5 +318,11 @@ const setVolumeFromClick = (event) => {
   background: #fff;
   border-radius: 2px;
   width: 60%;
+}
+.icon-btn.active {
+  color: #1ed760;
+}
+.icon-btn.active:hover {
+  color: #1ed760;
 }
 </style> 
