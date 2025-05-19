@@ -27,34 +27,50 @@
     <!-- Centro: controles y barra de progreso -->
     <div class="player-center">
       <div class="controls">
-        <button class="icon-btn" @click="toggleShuffle" :disabled="!currentSong" :class="{ active: isShuffle }">
-          <Icon icon="mdi:shuffle" width="20" height="20" :color="isShuffle ? '#1ed760' : (currentSong ? '#b3b3b3' : '#444')" />
-        </button>
-        <button class="icon-btn" @click="previousSong" :disabled="!currentSong">
-          <Icon icon="mdi:chevron-left-circle" width="40" height="40" :color="currentSong ? '#b3b3b3' : '#444'" />
-        </button>
-        <button class="play-btn" @click="togglePlay" :disabled="!currentSong">
-          <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-            <circle cx="28" cy="28" r="28" :fill="currentSong ? '#fff' : '#444'"/>
-            <template v-if="isPlaying">
-              <rect x="22" y="18" width="4" height="20" fill="#181818"/>
-              <rect x="30" y="18" width="4" height="20" fill="#181818"/>
-            </template>
-            <template v-else>
-              <polygon points="22,17 22,39 40,28" fill="#181818"/>
-            </template>
+        <button class="icon-btn" @click="toggleShuffle" :class="{ active: isShuffle }">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6"/>
           </svg>
         </button>
-        <button class="icon-btn" @click="nextSong" :disabled="!currentSong">
-          <Icon icon="mdi:chevron-right-circle" width="40" height="40" :color="currentSong ? '#b3b3b3' : '#444'" />
+        <button class="icon-btn" @click="previousSong">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 20L9 12l10-8v16zM5 19V5"/>
+          </svg>
         </button>
-        <button class="icon-btn" @click="toggleRepeat" :disabled="!currentSong" :class="{ active: repeatMode !== 'none' }">
-          <Icon 
-            :icon="repeatMode === 'one' ? 'mdi:repeat-once' : 'mdi:repeat'" 
-            width="20" 
-            height="20" 
-            :color="repeatMode !== 'none' ? '#1ed760' : (currentSong ? '#b3b3b3' : '#444')" 
-          />
+        <button class="play-btn" @click="togglePlay">
+          <svg v-if="!isPlaying" width="24" height="24" viewBox="0 0 24 24" fill="#000" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          <svg v-else width="24" height="24" viewBox="0 0 24 24" fill="#000" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="4" width="4" height="16"/>
+            <rect x="14" y="4" width="4" height="16"/>
+          </svg>
+        </button>
+        <button class="icon-btn" @click="nextSong">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 4l10 8-10 8V4zM19 5v14"/>
+          </svg>
+        </button>
+        <button class="icon-btn" @click="toggleRepeat" :class="{ active: repeatMode !== 'none' }">
+          <svg v-if="repeatMode === 'none'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b3b3b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 1l4 4-4 4"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <path d="M7 23l-4-4 4-4"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+          </svg>
+          <svg v-else-if="repeatMode === 'all'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1ed760" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 1l4 4-4 4"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <path d="M7 23l-4-4 4-4"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+          </svg>
+          <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1ed760" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 1l4 4-4 4"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <path d="M7 23l-4-4 4-4"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            <circle cx="12" cy="12" r="2"/>
+          </svg>
         </button>
       </div>
       <div class="progress-bar-wrapper">

@@ -75,7 +75,7 @@
         <i class="fas fa-plus"></i>
         <span>Crear Playlist</span>
       </button>
-      <button class="liked-songs">
+      <button class="liked-songs" @click="router.push('/liked')">
         <i class="fas fa-heart"></i>
         <span>Canciones que te gustan</span>
       </button>

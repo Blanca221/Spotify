@@ -105,7 +105,30 @@ const albums = [
     cover: "https://i.scdn.co/image/ab67706f00000002e2e2e2e2e2e2e2e2e2e2e2e2",
     artist: "Varios"
   },
-  // ...más álbumes
+  {
+    id: 3,
+    name: "Timeless",
+    cover: "https://i.scdn.co/image/ab67616d0000b273c6f7af36bcd24e9cbd4a2e2e",
+    artist: "Kelly Clarkson"
+  },
+  {
+    id: 4,
+    name: "Vultures 1",
+    cover: "https://i.scdn.co/image/ab67616d0000b273c6f7af36bcd24e9cbd4a2e2e",
+    artist: "Kanye West & Ty Dolla $ign"
+  },
+  {
+    id: 5,
+    name: "Never Was There",
+    cover: "https://i.scdn.co/image/ab67616d0000b273c6f7af36bcd24e9cbd4a2e2e",
+    artist: "MARROW"
+  },
+  {
+    id: 6,
+    name: "Girl You Loud",
+    cover: "https://i.scdn.co/image/ab67616d0000b273c6f7af36bcd24e9cbd4a2e2e",
+    artist: "Chris Brown"
+  }
 ]
 
 const artists = [
